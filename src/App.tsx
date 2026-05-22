@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Link, useNavigate } from "react-router";
+import { useBadgerSelector } from "./store/store";
+import Login from "./routes/login";
+import { useEffect } from "react";
 
-function App() {
+export default function App() {
+  const navigate = useNavigate();
+  const token = useBadgerSelector((state) => state.token);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate("/server");
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>Badger</h1>
+
+      <ul>
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+      </ul>
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </>
   );
 }
-
-export default App;
