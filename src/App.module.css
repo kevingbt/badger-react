@@ -1,0 +1,36 @@
+.app{
+    display: flex;
+    flex-direction: column;
+}
+
+.nav{
+    background-color: #eee;
+    padding: 10px 100px;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.nav ul{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    flex: 1;
+}
+
+.nav li:last-of-type{
+    margin-left: auto;
+}
+
+.nav li a{
+    text-decoration: none;
+    color: black;
+}
+
+.content{
+    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,98 @@
+.component{
+    margin-bottom: 50px;
+}
+
+.component>div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.component h1 {
+  font-size: 30px;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.component a {
+  display: inline-block;
+  color: #2563eb;
+  padding: 5px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.component a:hover {
+  background-color: #e0e0e0;
+}
+
+.serverTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  text-align: left;
+}
+
+.serverTable th {
+  background-color: #f8fafc;
+  color: #64748b;
+  padding: 20px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.serverTable td {
+  padding: 15px 25px;
+  font-size: 16px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.serverTable tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.serverTable tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.actionsCell {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.actionsCell a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.actionsCell a:hover {
+  text-decoration: underline;
+}
+
+.actionsCell button {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.actionsCell button:hover {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}

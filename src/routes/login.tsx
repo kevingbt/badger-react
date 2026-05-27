@@ -3,6 +3,7 @@ import { useBadgerDispatch } from "../store/store";
 import { setUser } from "../store/UserSlice";
 import { useNavigate } from "react-router";
 import useFetchApi from "../hook/fetchApi";
+import styles from "./Login.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,21 +34,21 @@ export default function Login() {
   };
 
   return (
-    <>
+    <div className={styles.login}>
       <form onSubmit={(e) => onSubmit(e)}>
         <h1>Login</h1>
         <input
           type="text"
-          placeholder="email"
+          placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
-          placeholder="password"
+          placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">login</button>
+        <button type="submit">Log In</button>
       </form>
-    </>
+    </div>
   );
 }

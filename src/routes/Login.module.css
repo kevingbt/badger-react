@@ -1,0 +1,36 @@
+.login h1{
+    text-align: center;
+}
+
+.login form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 300px;
+    margin: auto;
+}
+
+.login input{
+  border: #d8d8d8 1px solid;
+  border-radius: 8px;
+  padding: 7px 0 7px 10px;
+  font-size: 18px;
+  color: black;
+  font-family: Poppins, sans-serif;
+}
+
+.login button{
+    background-color: #d8d8d8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 18px;
+    color: rgb(104, 104, 104);
+    font-family: Poppins, sans-serif;
+    cursor: pointer;
+}
+
+.login button:hover{
+    background-color: #c8c8c8;
+    color: black;
+}
