@@ -1,34 +1,34 @@
 import { useState } from "react";
 import { useBadgerDispatch } from "../store/store";
-import { setToken } from "../store/TokenSlice";
+import { setUser } from "../store/UserSlice";
 import { useNavigate } from "react-router";
+import useFetchApi from "../hook/fetchApi";
 
 export default function Login() {
   const navigate = useNavigate();
-  const tokenDispatch = useBadgerDispatch();
+  const userDispatch = useBadgerDispatch();
+  const authorizationDispatch = useBadgerDispatch();
+  const fetchApi = useFetchApi();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const decode = (token: string) => {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  };
+
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch("https://badger.arcplex.dev/api/v2/login", {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
+    const data = await fetchApi("POST", "login", { email, password });
+    if (!data) {
       return;
     }
     setEmail("");
     setPassword("");
+    const user = decode(data.jwt);
     localStorage.setItem("token", data.jwt);
-    tokenDispatch(setToken(data.jwt));
+    userDispatch(setUser(user));
     navigate("/server");
   };
 
