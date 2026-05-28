@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFetchApi from "../hook/fetchApi";
-import styles from "./new.module.css";
+import styles from "./form.module.css";
+import { useNavigate } from "react-router";
 
-interface serverI {
+export interface serverI {
   name: string;
   cpu: number;
   public_ip: string;
@@ -13,7 +14,16 @@ interface serverI {
   ram: number;
 }
 
-export default function NewServer() {
+interface ServerFormProps {
+  serverInfo?: serverI;
+  id?: number;
+  backToList?: () => void;
+}
+export default function ServerForm({
+  serverInfo,
+  id,
+  backToList,
+}: ServerFormProps) {
   const [server, setServer] = useState<serverI>({
     name: "",
     cpu: 0,
@@ -24,7 +34,14 @@ export default function NewServer() {
     stock: 0,
     ram: 0,
   });
+
+  useEffect(() => {
+    if (serverInfo) setServer(serverInfo);
+  }, [serverInfo]);
+
   const fetchApi = useFetchApi();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (key: keyof serverI, value: string) => {
     setServer((p) => ({
@@ -35,14 +52,36 @@ export default function NewServer() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await fetchApi("POST", "admin/server", server);
-    console.log(data);
+    setError("");
+    try {
+      if (serverInfo) {
+        await fetchApi("PATCH", `admin/server/${id}`, server);
+        setError("Server updated successfully!");
+        navigate("/server");
+      } else {
+        await fetchApi("POST", "admin/server", server);
+        setError("Server created successfully!");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
+    }
   };
 
   return (
-    <div className={styles.component}>
-      <h1>New Server</h1>
-      <form onSubmit={onSubmit} className={styles.serverForm}>
+    <div className={styles.formContainer}>
+      <div>
+        <h1>{serverInfo ? "Edit Server" : "New Server"}</h1>
+        {!serverInfo && (
+          <button onClick={backToList} className={styles.backButton}>
+            Back to List
+          </button>
+        )}
+      </div>
+      <form onSubmit={onSubmit} className={styles.Form}>
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Name</label>
@@ -149,7 +188,7 @@ export default function NewServer() {
             />
           </div>
         </div>
-
+        {error && <div className={styles.error}>{error}</div>}
         <div className={styles.formActions}>
           <button type="submit" className={styles.submitBtn}>
             Save Server

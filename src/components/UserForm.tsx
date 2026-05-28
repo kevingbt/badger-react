@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFetchApi from "../hook/fetchApi";
-import styles from "./new.module.css";
+import styles from "./form.module.css";
+import { useNavigate } from "react-router";
 
-interface userI {
+export interface userI {
   name: string;
   firstname: string;
   email: string;
@@ -10,12 +11,15 @@ interface userI {
   ssh_user: string;
   ip_address: string;
   role: string;
-  team?: number;
+  team?: number | string;
 }
 
-export default function NewUser() {
-  const [client, setClient] = useState<any[]>([]);
-
+interface UserFormProps {
+  userInfo?: userI;
+  id?: number;
+  backToList?: () => void;
+}
+export default function UserForm({ userInfo, id, backToList }: UserFormProps) {
   const [user, setUser] = useState<userI>({
     name: "",
     firstname: "",
@@ -26,7 +30,21 @@ export default function NewUser() {
     role: "ROLE_USER",
     team: undefined,
   });
+  const [client, setClient] = useState<any[]>([]);
+  const navigate = useNavigate();
+
+  const fetchClients = async () => {
+    const data = await fetchApi("GET", "admin/client");
+    setClient(data);
+  };
+
+  useEffect(() => {
+    fetchClients();
+    if (userInfo) setUser(userInfo);
+  }, [userInfo]);
+
   const fetchApi = useFetchApi();
+  const [error, setError] = useState("");
 
   const handleChange = (key: keyof userI, value: string) => {
     setUser((p) => ({
@@ -35,25 +53,38 @@ export default function NewUser() {
     }));
   };
 
-  const fetchClients = async () => {
-    const data = await fetchApi("GET", "admin/client");
-    setClient(data);
-  };
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await fetchApi("POST", "admin/user", user);
-    console.log(data);
+    setError("");
+    try {
+      if (userInfo) {
+        await fetchApi("PATCH", `admin/user/${id}`, user);
+        setError("User updated successfully!");
+        navigate("/user");
+      } else {
+        await fetchApi("POST", "admin/user", user);
+        setError("User created successfully!");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
+    }
   };
 
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
   return (
-    <div className={styles.component}>
-      <h1>New User</h1>
-      <form onSubmit={onSubmit} className={styles.serverForm}>
+    <div className={styles.formContainer}>
+      <div>
+        <h1>{userInfo ? "Edit User" : "New User"}</h1>
+        {!userInfo && (
+          <button onClick={backToList} className={styles.backButton}>
+            Back to List
+          </button>
+        )}
+      </div>
+      <form onSubmit={onSubmit} className={styles.Form}>
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="name">Name</label>
@@ -171,6 +202,7 @@ export default function NewUser() {
             />
           </div>
         </div>
+        {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.formActions}>
           <button type="submit" className={styles.submitBtn}>

@@ -6,9 +6,6 @@ import User from "./routes/User";
 import Server from "./routes/Server";
 import Vm from "./routes/Vm";
 import NeedAuth from "./routes/NeedAuth";
-import NewUser from "./routes/NewUser";
-import NewServer from "./routes/NewServer";
-import NewVM from "./routes/NewVM";
 import EditUser from "./routes/EditUser";
 import EditVM from "./routes/EditVM";
 import EditServer from "./routes/EditServer";
@@ -34,13 +31,13 @@ export default function App() {
 
         <ul>
           <li>
-            <Link to="/server">Server</Link>
+            <Link to="/server">Servers</Link>
           </li>
           <li>
-            <Link to="/user">User</Link>
+            <Link to="/user">Users</Link>
           </li>
           <li>
-            <Link to="/vm">Virtual Machine</Link>
+            <Link to="/vm">Virtual Machines</Link>
           </li>
           {!token ? (
             <li>
@@ -59,15 +56,12 @@ export default function App() {
           <Route path="/logout" element={<Logout />} />
           <Route element={<NeedAuth />}>
             <Route path="/user" element={<User />} />
-            <Route path="/new-user" element={<NewUser />} />
             <Route path="/user/:id" element={<EditUser />} />
 
             <Route path="/server" element={<Server />} />
-            <Route path="/new-server" element={<NewServer />} />
             <Route path="/server/:id" element={<EditServer />} />
 
             <Route path="/vm" element={<Vm />} />
-            <Route path="/new-vm" element={<NewVM />} />
             <Route path="/vm/:id" element={<EditVM />} />
           </Route>
         </Routes>

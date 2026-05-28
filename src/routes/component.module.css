@@ -1,12 +1,22 @@
-.component{
-    margin-bottom: 50px;
+.component {
+  margin-bottom: 50px;
+  width: 1000px;
+  position: relative;
 }
 
-.component>div {
+.component > div {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.searchInput {
+  margin-left: auto;
+  padding: 10px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #334155;
 }
 
 .component h1 {
@@ -15,18 +25,51 @@
   color: #1a1a1a;
 }
 
-.component a {
+.component a, .component button {
   display: inline-block;
   color: #2563eb;
-  padding: 5px 15px;
+  padding: 10px 15px;
   border-radius: 6px;
   text-decoration: none;
   font-weight: 500;
   font-size: 14px;
+  border: none;
+  margin-left: 15px;
+  cursor: pointer;
 }
 
-.component a:hover {
+.component a:hover, .component button:hover {
   background-color: #e0e0e0;
+}
+
+.component .disabledButton {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.formContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 999; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formBox {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  z-index: 1000;
 }
 
 .serverTable {
@@ -35,7 +78,9 @@
   background-color: #ffffff;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   text-align: left;
 }
 

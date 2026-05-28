@@ -1,13 +1,14 @@
 import { useBadgerSelector } from "../store/store";
 
-export default function useCanDelete(entity?: string) {
+export default function useCanDelete() {
   //entity : vm, server, client, user
   const user = useBadgerSelector((state) => state.user);
-  if (user.user.roles[0] === "ROLE_SUPER_ADMIN") {
-    return true;
-  } else {
-    return false;
-  }
+  return function (entity?: string) {
+    if (!user.user) {
+      return false;
+    }
+    return user.user.roles[0] === "ROLE_SUPER_ADMIN";
+  };
 }
 
 //si vm - supp par super admin

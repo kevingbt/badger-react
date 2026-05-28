@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFetchApi from "../hook/fetchApi";
-import styles from "./new.module.css";
+import styles from "./form.module.css";
+import { useNavigate } from "react-router";
 
-interface vmI {
+export interface vmI {
   name: string;
   cpu: number;
   private_ip: string;
@@ -13,7 +14,12 @@ interface vmI {
   ram: number;
 }
 
-export default function NewVM() {
+interface VmFormProps {
+  vmInfo?: vmI;
+  id?: number;
+  backToList?: () => void;
+}
+export default function VmForm({ vmInfo, id, backToList }: VmFormProps) {
   const [servers, setServers] = useState<any[]>([]);
   const [vm, setVm] = useState<vmI>({
     name: "",
@@ -25,14 +31,8 @@ export default function NewVM() {
     stock: 0,
     ram: 0,
   });
-  const fetchApi = useFetchApi();
 
-  const handleChange = (key: keyof vmI, value: string) => {
-    setVm((p) => ({
-      ...p,
-      [key]: value,
-    }));
-  };
+  const navigate = useNavigate();
 
   const fetchServer = async () => {
     const data = await fetchApi("GET", "admin/server");
@@ -41,18 +41,50 @@ export default function NewVM() {
 
   useEffect(() => {
     fetchServer();
-  }, []);
+    if (vmInfo) setVm(vmInfo);
+  }, [vmInfo]);
+
+  const fetchApi = useFetchApi();
+  const [error, setError] = useState("");
+
+  const handleChange = (key: keyof vmI, value: string) => {
+    setVm((p) => ({
+      ...p,
+      [key]: value,
+    }));
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await fetchApi("POST", "admin/vm", vm);
-    console.log(data);
+    setError("");
+    try {
+      if (vmInfo) {
+        await fetchApi("PATCH", `admin/vm/${id}`, vm);
+        setError("Virtual Machine updated successfully!");
+        navigate("/vm");
+      } else {
+        await fetchApi("POST", "admin/vm", vm);
+        setError("Virtual Machine created successfully!");
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
+    }
   };
 
   return (
-    <div className={styles.component}>
-      <h1>New Virtual Machine</h1>
-
+    <div className={styles.formContainer}>
+      <div>
+        <h1>{vmInfo ? "Edit Virtual Machine" : "New Virtual Machine"}</h1>
+        {!vmInfo && (
+          <button onClick={backToList} className={styles.backButton}>
+            Back to List
+          </button>
+        )}
+      </div>
       <form onSubmit={onSubmit} className={styles.serverForm}>
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
@@ -165,6 +197,7 @@ export default function NewVM() {
             />
           </div>
         </div>
+        {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.formActions}>
           <button type="submit" className={styles.submitBtn}>

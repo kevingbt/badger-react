@@ -4,12 +4,20 @@ import { Link } from "react-router";
 import useCanDelete from "../hook/useCanDelete";
 import useCanEditAdd from "../hook/useCanEditAdd";
 import styles from "./component.module.css";
+import ServerForm from "../components/ServerForm";
 
 export default function Server() {
   const fetchApi = useFetchApi();
   const [servers, setServers] = useState<any[]>([]);
   const canDelete = useCanDelete();
   const canEditAdd = useCanEditAdd();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
+  const [showForm, setShowForm] = useState(false);
+
+  const toggleForm = () => {
+    setShowForm((prev) => !prev);
+  };
 
   const fetchServer = async () => {
     const data = await fetchApi("GET", "admin/server/me");
@@ -18,17 +26,63 @@ export default function Server() {
 
   const deleteServer = async (id: number) => {
     await fetchApi("DELETE", `admin/server/${id}`);
+    setServers((prev) => prev.filter((server) => server.id !== id));
   };
 
   useEffect(() => {
     fetchServer();
   }, []);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 600);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  const filteredServers = servers.filter((server) => {
+    const query = debouncedQuery.toLowerCase().trim();
+    if (!query) return true;
+
+    const nameMatch = server.name?.toLowerCase().includes(query);
+    const publicIpMatch = server.public_ip?.toLowerCase().includes(query);
+    const cpuMatch = server.cpu?.toString().toLowerCase().includes(query);
+    const ramMatch = server.ram?.toString().toLowerCase().includes(query);
+    const storageMatch = server.storage
+      ?.toString()
+      .toLowerCase()
+      .includes(query);
+
+    return nameMatch || publicIpMatch || cpuMatch || ramMatch || storageMatch;
+  });
+
   return (
     <div className={styles.component}>
+      {showForm && (
+        <div className={styles.formContainer} onClick={toggleForm}>
+          <div className={styles.formBox} onClick={(e) => e.stopPropagation()}>
+            <ServerForm backToList={toggleForm} />
+          </div>
+        </div>
+      )}
       <div>
-        <h1>Server</h1>
-        {canEditAdd && <Link to="/new-server">New Server</Link>}
+        <h1>Servers</h1>
+        <input
+          type="text"
+          placeholder="Search by name, public IP, CPU..."
+          className={styles.searchInput}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button
+          onClick={toggleForm}
+          className={canEditAdd() ? "" : styles.disabledButton}
+        >
+          New Server
+        </button>
       </div>
 
       <table className={styles.serverTable}>
@@ -39,31 +93,33 @@ export default function Server() {
             <th>CPU</th>
             <th>RAM</th>
             <th>Storage</th>
-            {(canEditAdd || canDelete) && <th>Actions</th>}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {servers.map((server) => (
+          {filteredServers.map((server) => (
             <tr key={server.id}>
               <td>{server.name}</td>
               <td>{server.public_ip}</td>
               <td>{server.cpu} cores</td>
               <td>{server.ram} Go</td>
               <td>{server.stock} Go</td>
-              {(canEditAdd || canDelete) && (
-                <td>
-                  <div className={styles.actionsCell}>
-                    {canEditAdd && (
-                      <Link to={`/server/${server.id}`}>Modifier</Link>
-                    )}
-                    {canDelete && (
-                      <button onClick={() => deleteServer(server.id)}>
-                        Supprimer
-                      </button>
-                    )}
-                  </div>
-                </td>
-              )}
+              <td>
+                <div className={styles.actionsCell}>
+                  <Link
+                    to={`/server/${server.id}`}
+                    className={canEditAdd() ? "" : styles.disabledButton}
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => deleteServer(server.id)}
+                    className={canDelete() ? "" : styles.disabledButton}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>

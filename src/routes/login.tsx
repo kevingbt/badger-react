@@ -10,6 +10,7 @@ export default function Login() {
   const userDispatch = useBadgerDispatch();
   const authorizationDispatch = useBadgerDispatch();
   const fetchApi = useFetchApi();
+  const [error, setError] = useState<string>("");
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -21,16 +22,26 @@ export default function Login() {
 
   const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await fetchApi("POST", "login", { email, password });
-    if (!data) {
-      return;
+    setError("");
+    try {
+      const data = await fetchApi("POST", "login", { email, password });
+
+      if (!data) {
+        return;
+      }
+      setEmail("");
+      setPassword("");
+      const user = decode(data.jwt);
+      localStorage.setItem("token", data.jwt);
+      userDispatch(setUser(user));
+      navigate("/server");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
     }
-    setEmail("");
-    setPassword("");
-    const user = decode(data.jwt);
-    localStorage.setItem("token", data.jwt);
-    userDispatch(setUser(user));
-    navigate("/server");
   };
 
   return (
@@ -48,6 +59,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit">Log In</button>
+        {error && <p className={styles.error}>{error}</p>}
       </form>
     </div>
   );
