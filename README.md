@@ -1,46 +1,129 @@
-# Getting Started with Create React App
+# ?? Badger - Plateforme de Gestion d'Infrastructure
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Badger est une application React moderne pour la gestion centralisée de votre infrastructure cloud. Administrez facilement vos serveurs, machines virtuelles et utilisateurs avec une interface intuitive et sécurisée.
 
-## Available Scripts
+## ? Fonctionnalités
 
-In the project directory, you can run:
+- **?? Gestion des Utilisateurs** - Créer, modifier et supprimer les utilisateurs du système
+- **??? Gestion des Serveurs** - Administrer votre parc de serveurs physiques ou cloud
+- **?? Gestion des Machines Virtuelles** - Contrôler et configurer vos VMs
+- **?? Authentification Sécurisée** - Système de login avec tokens JWT
+- **?? Dashboard Intuitif** - Interface moderne et réactive
+- **?? Contrôle d'Accès** - Permissions granulaires basées sur les rôles utilisateur
+- **?? Édition en Ligne** - Modifier vos ressources directement depuis l'application
 
-### `npm start`
+## ?? Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prérequis
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Node.js (v14+)
+- npm ou yarn
 
-### `npm test`
+### Étapes d'installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clonez le dépôt**
+   \\\bash
+   git clone https://github.com/kevingbt/badger-react.git
+   cd badger-react
+   \\\
 
-### `npm run build`
+2. **Installez les dépendances**
+   \\\bash
+   npm install
+   \\\
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Démarrez le serveur de développement**
+   \\\bash
+   npm start
+   \\\
+   L'application s'ouvrira automatiquement sur [http://localhost:3000](http://localhost:3000)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ?? Scripts Disponibles
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### \
+pm start\
+Lance l'application en mode développement avec rechargement automatique.
 
-### `npm run eject`
+### \
+pm test\
+Exécute les tests en mode watch interactif.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### \
+pm run build\
+Crée une version optimisée pour la production dans le dossier \build/\.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### \
+pm run eject\
+?? **Opération irréversible** - Éjecte la configuration Create React App si vous avez besoin de personnalisation avancée.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## ??? Architecture
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+\\\
+src/
++-- components/       # Composants réutilisables (formulaires)
++-- routes/          # Pages de l'application
++-- store/           # Gestion d'état avec Redux Toolkit
++-- hooks/           # Hooks personnalisés
++-- App.tsx          # Composant principal
+\\\
 
-## Learn More
+### Modules Clés
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Redux Store** - Gestion centralisée de l'état utilisateur
+- **React Router** - Navigation entre les pages
+- **Authentification** - Tokens stockés localement
+- **API Integration** - Communication avec le backend via \fetchApi\ hook
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ?? Authentification
+
+L'application utilise un système de token JWT :
+1. Connectez-vous via la page \/login\
+2. Le token est stocké dans \localStorage\
+3. Les requêtes API incluent automatiquement le token
+4. Déconnexion disponible via le lien "Log Out"
+
+## ?? Dépendances Principales
+
+- **React 19** - Framework frontend
+- **Redux Toolkit** - Gestion d'état
+- **React Router 7** - Routage
+- **TypeScript** - Typage statique
+- **Testing Library** - Tests unitaires et d'intégration
+
+## ??? Développement
+
+### Structure des Routes
+
+| Route | Description |
+|-------|-------------|
+| \/login\ | Page de connexion |
+| \/user\ | Liste des utilisateurs |
+| \/user/:id\ | Édition d'un utilisateur |
+| \/server\ | Liste des serveurs |
+| \/server/:id\ | Édition d'un serveur |
+| \/vm\ | Liste des VMs |
+| \/vm/:id\ | Édition d'une VM |
+
+### Permissions
+
+L'app vérifie les permissions via les hooks :
+- \useCanEditAdd\ - Droit de création/édition
+- \useCanDelete\ - Droit de suppression
+
+## ?? Déploiement
+
+Pour déployer en production :
+
+\\\bash
+npm run build
+\\\
+
+Le dossier \build/\ contient une version minifiée et optimisée prête pour le déploiement.
+
+## ?? Licence
+
+Ce projet est privé. Pour plus d'informations, consultez le propriètaire du dépôt.
+
+---
+
+**Besoin d'aide ?** Consultez la [documentation React](https://react.dev) ou la [documentation Create React App](https://create-react-app.dev).
