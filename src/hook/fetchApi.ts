@@ -1,9 +1,3 @@
-interface FetchApiI {
-  method: string;
-  endpoint: string;
-  body?: any;
-}
-
 export default function useFetchApi() {
   const token = localStorage.getItem("token");
   return async function (method: string, endpoint: string, body?: any) {

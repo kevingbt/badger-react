@@ -8,10 +8,8 @@ import styles from "./Login.module.css";
 export default function Login() {
   const navigate = useNavigate();
   const userDispatch = useBadgerDispatch();
-  const authorizationDispatch = useBadgerDispatch();
   const fetchApi = useFetchApi();
   const [error, setError] = useState<string>("");
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
